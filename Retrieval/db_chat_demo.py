@@ -10,15 +10,16 @@ from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import FAISS,Chroma
 from langchain.prompts import PromptTemplate
 from transformers import AutoModel
-#from .llm_server_demo import LLM_Server     #use our investchat
-from .llm_server_gpt import LLM_Server    #use gpt3.5
-#from Retrieval import LLM_Server
 from langchain.chains import RetrievalQA
 warnings.filterwarnings("ignore")
 
 embeddings_model_name = r"Retrieval/Embedding/bge-base-en-v1.5/"
 embeddings_model_kwargs = {'device': 'cuda:2'}
 embeddings_encode_kwargs = {'normalize_embeddings':True}
+
+openai.api_key = "EMPTY"
+openai.api_base = "http://localhost:8000/v1"
+llm = ChatOpenAI(model="gpt-3.5-turbo", openai_api_key=openai.api_key, openai_api_base=openai.api_base)
 
 def get_docs(query, db):
     """

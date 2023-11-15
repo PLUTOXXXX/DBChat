@@ -8,12 +8,12 @@ import warnings
 warnings.filterwarnings("ignore")
 
 
-chatgpt_model_name = "gpt-35-turbo"
+chatgpt_model_name = "gpt-3.5-turbo"
 openai.api_type = "azure"
 openai.api_key = "7e75283a54c942bdaadb2800105d560f"
 openai.api_base = "https://dia.openai.azure.com"
 openai.api_version = "2023-03-15-preview"
-model_kwargs = {"engine":"gpt-35-turbo"}
+model_kwargs = {"engine":"gpt-3.5-turbo"}
 
 class LLM_Server(object):
 
