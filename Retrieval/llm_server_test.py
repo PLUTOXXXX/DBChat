@@ -1,14 +1,16 @@
 from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders import TextLoader
-from langchain.embeddings import OpenAIEmbeddings
 from langchain.indexes import VectorstoreIndexCreator
+from langchain.embeddings import HuggingFaceEmbeddings
 import openai
 
 openai.api_key = "EMPTY"
 openai.api_base = "http://localhost:8000/v1"
-
-embedding = OpenAIEmbeddings(model="text-embedding-ada-002", openai_api_key=openai.api_key, openai_api_base=openai.api_base)
-loader = TextLoader("state_of_the_union.txt")
+embeddings_model_name = r"Retrieval/Embedding/bge-base-en-v1.5/"
+embeddings_model_kwargs = {'device': 'cuda'}
+embeddings_encode_kwargs = {'normalize_embeddings':True}
+embedding = HuggingFaceEmbeddings(model_name=embeddings_model_name,model_kwargs=embeddings_model_kwargs,encode_kwargs=embeddings_encode_kwargs)
+loader = TextLoader("/home/ubuntu/ShenXiaoping/DBChat/Retrieval/state_of_the_union.txt")
 index = VectorstoreIndexCreator(embedding=embedding).from_loaders([loader])
 llm = ChatOpenAI(model="gpt-3.5-turbo", openai_api_key=openai.api_key, openai_api_base=openai.api_base)
 
