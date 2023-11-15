@@ -17,5 +17,3 @@ def schema_splitter(file_path):
         documents.append(new_doc)
     return documents
 
-
-print(schema_splitter('mediawiki.sql')[0])
