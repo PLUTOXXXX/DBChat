@@ -13,18 +13,9 @@ import copy
 import os
 import requests
 
-
-parser = argparse.ArgumentParser()
-parser.add_argument('-f', '--file_path', 
-                    type=str, default='{empty}')
-args = vars(parser.parse_args())
-
-
 TOKEN_LIST = [
 "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",
 ]
-
-
 
 CUR_KEY = random.choice(TOKEN_LIST)
 ITERATION = 1 
@@ -121,8 +112,7 @@ def check_result(res):
         return False
 
 
-def run():
-
+def run(data):
 
     global CUR_KEY
     NEW_KEY = random.choice(TOKEN_LIST)
@@ -132,8 +122,6 @@ def run():
         CUR_KEY = NEW_KEY
     openai.api_key = CUR_KEY
 
-    testcase = pd.read_csv(args['file_path'])
-    data = testcase.to_string()
     #print(data)
     #json_data = json.dumps(data)
     
@@ -168,4 +156,3 @@ def run():
 
     print("Image saved as chart.png")
 
-run()
