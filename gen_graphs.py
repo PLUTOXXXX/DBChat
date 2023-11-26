@@ -130,7 +130,7 @@ def run(data):
     DONE = False
     retry_ctr = 0 
     while not DONE and retry_ctr< ITERATION:
-        print('[+] Calling OpenAI API...')
+        #print('[+] Calling OpenAI API...')
         # Original query 
         prompt = return_prompt(data,system_prompt=system_prompt, assistant_prompt = assistant_prompt)
         res = query_model(prompt,json_parser)
@@ -139,20 +139,19 @@ def run(data):
              DONE = True 
         else:
             retry_ctr += 1 
-        print('='*10)
-
-    
+        #print('='*10)
 
     start_index = res.index("(") + 1
     end_index = res.rindex(")")
 
     res = res[start_index:end_index]
-    print(res)
     response = requests.get(res)
     response.raise_for_status()
 
-    with open("chart.png", "wb") as f:
+    current_path = os.getcwd()
+    save_path = os.path.join(current_path, 'chart.png')
+    with open(save_path, "wb") as f:
         f.write(response.content)
 
-    print("Image saved as chart.png")
+    return save_path
 
