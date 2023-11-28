@@ -2,7 +2,7 @@
   DBChat
 </h1>
 <p align="center" width="100%">
-  <img src="DBChat.png" alt="DBChat" style="width: 20%; display: block; margin: auto;"></a>
+  <img src="DBChat.png" alt="DBChat" style="width: 30%; display: block; margin: auto;"></a>
 </p>
 <p align="center">
   <font face="黑体" color=orange size="6"> Easily query your database using natural language </font>
@@ -11,7 +11,6 @@
 </br></br>
 # DBChat
 Natural language and database interaction system based on NL to SQL 
-![DBChat](./DBChat.png)
 ## Reference
 1. https://github.com/chatchat-space/Langchain-Chatchat
 2. https://github.com/eosphoros-ai/DB-GPT
