@@ -1,5 +1,5 @@
 <h1 align="center">
-  DBChat
+  HKUST BDT 5018 project: DBChat
 </h1>
 <p align="center" width="100%">
   <img src="DBChat.png" alt="DBChat" style="width: 30%; display: block; margin: auto;"></a>
