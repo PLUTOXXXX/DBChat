@@ -24,7 +24,13 @@ def build_user_database(user_id: str):
     
     #Build database
     chunks = schema_splitter(directory_path)
+    
+    print(chunks)
+    
     db = Chroma.from_documents(chunks, embeddings,persist_directory = index_file)
+    
+    # print(db.get())
+    
     print(f"{user_id}'s Private Database was Built!")
 
 if __name__ == '__main__':

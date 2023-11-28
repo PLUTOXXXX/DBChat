@@ -14,6 +14,9 @@ import mysql.connector
 import csv
 import gen_graphs
 
+current_directory = os.path.dirname(__file__)
+image_path = os.path.join(current_directory, 'decorate_6.jpg')
+
 ans = ""
 user_name = ""
 dir = r"C:\Users\Administrator\Desktop\test"
@@ -144,7 +147,7 @@ def interact_with_model(message,history):
         time.sleep(0.1)
     return "",history
 
-decorate_6 = PIL.Image.open("C:\\Users\\Administrator\\Desktop\\I\\decorate_6.jpg")
+decorate_6 = PIL.Image.open(image_path)
 decorate_6 = repair_image(decorate_6)
 
 def same_auth(username,passward):
