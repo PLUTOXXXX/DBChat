@@ -1,5 +1,6 @@
 # DBChat
 Natural language and database interaction system based on NL to SQL 
+![DBChat](./DBChat)
 ## Reference
 1. https://github.com/chatchat-space/Langchain-Chatchat
 2. https://github.com/eosphoros-ai/DB-GPT
