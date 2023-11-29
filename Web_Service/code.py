@@ -6,20 +6,34 @@ import time
 from PIL import Image,ImageFilter,ImageEnhance
 import os
 import shutil
-#import db_chat_demo
-#import db_creator_demo
+import sys
+
+# 获取当前脚本的完整路径
+current_script_path = os.path.abspath(__file__)
+# 获取当前脚本的目录
+current_directory = os.path.dirname(current_script_path)
+# 获取上级目录的路径
+parent_directory = os.path.dirname(current_directory)
+Retrieval_path = parent_directory+'/Retrieval'
+# 将上级目录添加到sys.path
+sys.path.append(parent_directory)
+sys.path.append(Retrieval_path)
+# 现在可以导入Retrieval目录下的模块
+from Retrieval import db_chat_demo, db_creator_demo
+
 import pandas as pd
 import psycopg2
 import mysql.connector
 import csv
 import gen_graphs
-
-current_directory = os.path.dirname(__file__)
+current_file_path = os.path.abspath(__file__)
+current_directory = os.path.dirname(current_file_path)
 image_path = os.path.join(current_directory, 'decorate_6.jpg')
-
+print(current_directory)
 ans = ""
 user_name = ""
-dir = r"C:\Users\Administrator\Desktop\test"
+dir = os.path.join(current_directory, "../mounted_repos/")
+print(dir)
 sql = "SELECT e.emp_no, e.first_name, e.last_name, MAX(s.salary) AS highest_salary FROM employees e JOIN salaries s ON e.emp_no = s.emp_no WHERE s.from_date >= '1989-01-01' AND s.to_date <= '1990-01-01' GROUP BY e.emp_no ORDER BY highest_salary DESC LIMIT 10;"
 # 数据库连接配置
 db_config = {
@@ -61,16 +75,9 @@ def get_information():
 
     # 关闭cursor和连接
         cursor.close()
-        db_connection.close()
+#        db_connection.close()
 
-        global ans
-        ans = ret
-        with open(dir + r'\data.csv','w',newline='') as csvfile:
-            writer = csv.writer(csvfile)
-            for i in ans:
-                writer.writerow([i])
-        data = csvfile
-        return ret,data
+        return ret
 #成比例缩放图像
 def reset_image(img,scale):
     #读取图像
@@ -133,18 +140,18 @@ def interact_with_model(message,history):
         #加载进度条
         gr.Progress(0)
         global sql
-        #sql,bot_respond = db_chat_demo.chat_with_db(message,user_name)
+        sql,bot_respond = db_chat_demo.chat_with_db(UserID=user_name,Query=message)
         #bot_respond = random.choince(['1','2'])
-        bot_respond = pd.read_sql("SELECT e.emp_no, e.first_name, e.last_name, MAX(s.salary) AS highest_salary FROM employees e JOIN salaries s ON e.emp_no = s.emp_no WHERE s.from_date >= '1989-01-01' AND s.to_date <= '1990-01-01' GROUP BY e.emp_no ORDER BY highest_salary DESC LIMIT 10;",con=connection_string)
+        #bot_respond = pd.read_sql("SELECT e.emp_no, e.first_name, e.last_name, MAX(s.salary) AS highest_salary FROM employees e JOIN salaries s ON e.emp_no = s.emp_no WHERE s.from_date >= '1989-01-01' AND s.to_date <= '1990-01-01' GROUP BY e.emp_no ORDER BY highest_salary DESC LIMIT 10;",con=connection_string)
         print(bot_respond)
-        time.sleep(0.1)
+        time.sleep(1)
         gr.Progress(0.25)
         history.append([message,bot_respond])
-        time.sleep(0.1)
+        time.sleep(1)
         gr.Progress(0.5)
-        time.sleep(0.1)
+        time.sleep(1)
         gr.Progress(0.75)
-        time.sleep(0.1)
+        time.sleep(1)
     return "",history
 
 decorate_6 = PIL.Image.open(image_path)
@@ -156,16 +163,16 @@ def same_auth(username,passward):
     return username == passward
 
 def set_file(user_file,progress = gr.Progress()):
-    if not os.path.exists(dir + '\\' + user_name):
-        os.mkdir(dir + '\\' + user_name)
-    new_path = dir + '\\' + user_name
+    if not os.path.exists(dir + '/' + user_name):
+        os.mkdir(dir + '/' + user_name)
+    new_path = dir + '/' + user_name
     file_path = user_file.name
     shutil.copy(file_path,new_path)
-    #db_creator_demo.build_user_database(user_name)
-    for i in range(20):
-        progress(i * 0.05,desc='Please wait us to deal with your file')
+    for i in range(2):
+        progress(i * 0.5,desc='Please wait us to deal with your file')
         gr.Markdown('Please wait us to deal with your file')
         time.sleep(1)
+        db_creator_demo.build_user_database(user_name)
     return "Deal with your file successfully!"
 
 def get_graph(data):
@@ -216,12 +223,8 @@ with gr.Blocks(theme = gr.themes.Soft()) as demo:
         gr.Markdown("Here we will show you the information from the database")
         temptext = gr.Textbox(lines = 20)
         bf = gr.Button("Click the button and get your information")
-        tempfile = gr.File(visble = False)
-        bf.click(fn = get_information,outputs = [temptext,tempfile])
-        tempimage = gr.Image(lines = 20)
-        bf2 = gr.Button("Click here to see the graph results")
-        bf2.click(fn = get_graph,inputs = tempfile,outputs = tempimage)
-        os.removedirs(dir + r'\data.csv')
+        bf.click(fn = get_information,outputs = temptext)
+#        os.removedirs(dir + r'data.csv')
     #set basic help
     with gr.Tab("Tips"):
         #introduction
@@ -234,4 +237,4 @@ with gr.Blocks(theme = gr.themes.Soft()) as demo:
         clear = gr.ClearButton([msg,chatbot])
         msg.change(respond_help,[msg,chatbot],[msg,chatbot])
 
-demo.queue().launch(share = True,auth = same_auth,auth_message = "Put your name on the username and the passward is the same as your username")
+demo.queue().launch(share = True,auth = same_auth,server_name = '0.0.0.0',auth_message = "Put your name on the username and the passward is the same as your username")

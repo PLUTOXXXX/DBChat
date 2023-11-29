@@ -9,17 +9,19 @@ from langchain.chat_models import ChatOpenAI
 from SchemaSplitter import schema_splitter
 import openai
 
-
+current_script_path = os.path.abspath(__file__)
+current_directory = os.path.dirname(current_script_path)
+parent_directory = os.path.dirname(current_directory)
+mounted_repos_path = parent_directory+'/mounted_repos/'
 def build_user_database(user_id: str):
     user_directory = f"{user_id}"
     user_database = f"{user_id}_Database"
-    directory_path = os.path.join("/home/ubuntu/ShenXiaoping/DBChat/mounted_repos/", user_directory)
-    index_file = os.path.join("/home/ubuntu/ShenXiaoping/DBChat/mounted_repos/", user_database)    
-    #Load embeddings model
-    embeddings_model_name = "/home/ubuntu/ShenXiaoping/DBChat/Retrieval/Embedding/bge-base-en-v1.5/"
+    directory_path = os.path.join(mounted_repos_path, user_directory)
+    index_file = os.path.join(mounted_repos_path, user_database)
+    embeddings_model_path =  parent_directory+'/model/embedding/bge-base-en-v1.5/' 
     embeddings_model_kwargs = {'device': 'cuda'}
     embeddings_encode_kwargs = {'normalize_embeddings':True}
-    embeddings = HuggingFaceEmbeddings(model_name=embeddings_model_name,model_kwargs=embeddings_model_kwargs,encode_kwargs=embeddings_encode_kwargs)
+    embeddings = HuggingFaceEmbeddings(model_name=embeddings_model_path,model_kwargs=embeddings_model_kwargs,encode_kwargs=embeddings_encode_kwargs)
     print("embedding model has loaded!")
     
     #Build database
